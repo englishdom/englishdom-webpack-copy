@@ -37,11 +37,13 @@ module.exports = async function(copyList, pathFrom, pathTo) {
     var filePath = path.resolve(pathFrom + '/' + copyList[i]);
     var file = copyList[i];
 
-    fs.copyFileSync(filePath, path.resolve(pathTo + '/' + file), {
-      process: function(contents) {
-        filesCount += 1;
-      }
-    });
+    if (fs.existsSync(path.resolve(pathTo + '/' + file))) {
+      fs.copyFileSync(filePath, path.resolve(pathTo + '/' + file), {
+        process: function(contents) {
+          filesCount += 1;
+        }
+      });
+    }    
   }
 
   console.info('Copied ' + filesCount + ' files.');  
