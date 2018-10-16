@@ -34,10 +34,10 @@ module.exports = async function(copyList, pathFrom, pathTo) {
   }
 
   for (var i = 0; i < copyList.length; i++) {
-    var filePath = path.resolve(pathFrom + '/' + copyList[i] + '.js');
+    var filePath = path.resolve(pathFrom + '/' + copyList[i]);
     var file = copyList[i];
 
-    fs.copyFileSync(filePath, path.resolve(pathTo + '/' + file + '.js'), {
+    fs.copyFileSync(filePath, path.resolve(pathTo + '/' + file), {
       process: function(contents) {
         filesCount += 1;
       }
