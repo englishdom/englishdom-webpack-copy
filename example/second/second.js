@@ -1,1 +1,1 @@
-undefined
+var sub = 3;

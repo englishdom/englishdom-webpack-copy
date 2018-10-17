@@ -44,6 +44,8 @@ module.exports = async function(copyList, pathFrom, pathTo) {
         } else {
           fs.copyFileSync(pathFind, path.resolve(pathFind.replace(pathFrom, pathTo)), {
             process: function(contents) {
+              fs.writeFile(path.resolve(pathFind.replace(pathFrom, pathTo)), contents)
+
               filesCount += 1;
             }
           })
@@ -79,6 +81,8 @@ module.exports = async function(copyList, pathFrom, pathTo) {
       try {
         fs.copyFileSync(filePath, path.resolve(pathTo + '/' + pathFind), {
           process: function(contents) {
+            fs.writeFile(path.resolve(pathTo + '/' + pathFind), contents)
+
             filesCount += 1;
           }
         })
