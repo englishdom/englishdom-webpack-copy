@@ -1,11 +1,11 @@
 {
   "name": "englishdom-webpack-copy",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "plugin for files copying",
   "main": "index.js",
   "dependencies": {
-    "file-system": "^2.2.2",
-    "path": "^0.12.7"
+    "file-system": "2.2.2",
+    "path": "0.12.7"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

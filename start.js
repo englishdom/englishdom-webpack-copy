@@ -2,8 +2,8 @@ var method = require('./index.js');
 
 method(  
   [
-    'first/first-sub/first-sub-sub/first-sub-sub',
-    'second/second',
+    'first/first-sub/*',
+    'second/second.js',
   ],
   'example',
   'public/example-vendor'
