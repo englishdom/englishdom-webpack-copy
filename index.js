@@ -30,22 +30,22 @@ module.exports = async function(pathFrom, pathTo) {
     try {
       fs.readdirSync(pathFrom).forEach(function(file) {
         var pathFind = pathFrom + '/' + file;
-
-        if (file.indexOf('html') > 0 || fs.lstatSync(pathFind).isDirectory()) {
     
-          if(fs.lstatSync(pathFind).isDirectory()) {
-            findHtmlTemplatesRecursive(pathFind);
-      
-          } else {
-            htmlFilesBuilded += 1;
+        if(fs.lstatSync(pathFind).isDirectory()) {
+          findHtmlTemplatesRecursive(pathFind);
+    
+        } else {
+          htmlFilesBuilded += 1;
+          
+          fs.readFile(pathFind, 'utf8', function(err, content) {
+            var root = 'export default `' + content + '`';
+            var replacer = 'html';
+
+            if (file.indexOf('hbs') > 0) replacer = 'hbs';              
             
-            fs.readFile(pathFind, 'utf8', function(err, content) {
-              var root = 'export default `' + content + '`';
-              
-              fs.writeFile(path.resolve(pathTo, file.replace('html', 'js')), root, function(err) {});
-            })          
-          }
-        }        
+            fs.writeFile(path.resolve(pathTo, file.replace(replacer, 'js')), root, function(err) {});
+          })          
+        }
       });
 
     } catch(e) {
@@ -62,5 +62,5 @@ module.exports = async function(pathFrom, pathTo) {
 
   findHtmlTemplatesRecursive(path.resolve(pathFrom));
   
-  console.info('Builded ' + htmlFilesBuilded + ' html templates.');
+  console.info('Builded ' + htmlFilesBuilded + ' templates.');
 };
