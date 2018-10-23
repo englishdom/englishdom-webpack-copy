@@ -1,6 +1,6 @@
 {
   "name": "englishdom-templates",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "plugin for building .html / .hbs templates",
   "main": "index.js",
   "dependencies": {
