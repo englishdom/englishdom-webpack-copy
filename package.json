@@ -1,10 +1,9 @@
 {
   "name": "englishdom-webpack-copy",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "plugin for files copying",
   "main": "index.js",
   "dependencies": {
-    "file-system": "2.2.2",
     "path": "0.12.7"
   },
   "scripts": {

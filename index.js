@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const fs = require('file-system');
+const fs = require('fs');
 
 module.exports = async function(copyList, pathFrom, pathTo) {  
   var pathFrom = pathFrom || 'node_modules';
