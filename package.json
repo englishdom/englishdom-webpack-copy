@@ -1,7 +1,13 @@
 {
+<<<<<<< HEAD
   "name": "englishdom-webpack-copy",
   "version": "0.1.6",
   "description": "plugin for files copying",
+=======
+  "name": "englishdom-templates",
+  "version": "0.1.1",
+  "description": "plugin for building .html / .hbs templates",
+>>>>>>> 6d8ef1846e9886f4f40fa702a64251630bbaf051
   "main": "index.js",
   "dependencies": {
     "path": "0.12.7"
