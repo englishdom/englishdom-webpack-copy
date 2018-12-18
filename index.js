@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const fs = require('fs');
+const fs = require('file-system');
 
 module.exports = async function(copyList, pathFrom, pathTo) {  
   var pathFrom = pathFrom || 'node_modules';
@@ -42,18 +42,18 @@ module.exports = async function(copyList, pathFrom, pathTo) {
           copyFolderRecursive(pathFind);
     
         } else {
-          fs.copyFileSync(pathFind, path.resolve(pathFind.replace(pathFrom, pathTo)), {
-            process: function(contents) {
-              fs.writeFile(path.resolve(pathFind.replace(pathFrom, pathTo)), contents)
-
-              filesCount += 1;
-            }
-          })
+          try {
+            fs.copyFileSync(pathFind, path.resolve(pathFind.replace(pathFrom, pathTo)), () => {});
+            filesCount += 1;
+      
+          } catch(e) {
+            console.error('No such file or directory: ', filePath);  
+          }
         }
       });
 
     } catch(e) {
-      console.error('No such file or directory: ', filePath)
+      console.error('(Rec) No such file or directory: ', filePath)
 
     } 
 
@@ -79,17 +79,11 @@ module.exports = async function(copyList, pathFrom, pathTo) {
       var pathFind = copyList[i];
 
       try {
-        fs.copyFileSync(filePath, path.resolve(pathTo + '/' + pathFind), {
-          process: function(contents) {
-            fs.writeFile(path.resolve(pathTo + '/' + pathFind), contents)
-
-            filesCount += 1;
-          }
-        })
+        fs.copyFileSync(filePath, path.resolve(pathTo + '/' + pathFind), () => {});
+        filesCount += 1;
   
       } catch(e) {
-        console.error('No such file or directory: ', filePath)
-  
+        console.error('No such file or directory: ', filePath);  
       }      
     }
   }  
