@@ -3,64 +3,96 @@
 const path = require('path');
 const fs = require('fs');
 
-module.exports = async function(pathFrom, pathTo) {
-  if (!pathFrom || !pathTo) {
-    console.warn('One of paths not find');
+module.exports = async function(copyList, pathFrom, pathTo) {  
+  var pathFrom = pathFrom || 'node_modules';
+  var filesCount = 0;
 
-    return;
-  }
-
-  var htmlFilesBuilded = 0;
-
-  var deleteExistingBindles = function () {
-    let findPath = path.resolve(pathTo);
-
-    if (fs.existsSync(findPath)) {
-      fs.readdirSync(findPath).forEach(function(file){
-        var filePath = findPath + '/' + file;
-  
-        fs.unlinkSync(filePath);        
-      });
-
-      fs.rmdirSync(findPath);      
-    }
-  };  
-
-  var findHtmlTemplatesRecursive = function (pathFrom) {
+  var deleteFolderRecursive = function (pathFind) {
     try {
-      fs.readdirSync(pathFrom).forEach(function(file) {
-        var pathFind = pathFrom + '/' + file;
+      if(fs.existsSync(pathFind)) {
+        if (!pathFind) pathFind = path.resolve(pathTo);
     
-        if(fs.lstatSync(pathFind).isDirectory()) {
-          findHtmlTemplatesRecursive(pathFind);
+        fs.readdirSync(pathFind).forEach(function(file){
+          pathFind = pathFind + '/' + file;
     
-        } else {
-          htmlFilesBuilded += 1;
-          
-          fs.readFile(pathFind, 'utf8', function(err, content) {
-            var root = 'export default `' + content + '`';
-            var replacer = 'html';
-
-            if (file.indexOf('hbs') > 0) replacer = 'hbs';              
-            
-            fs.writeFile(path.resolve(pathTo, file.replace(replacer, 'js')), root, function(err) {});
-          })          
-        }
-      });
+          if(fs.lstatSync(pathFind).isDirectory()) {
+            deleteFolderRecursive(pathFind);
+    
+          } else {
+            fs.unlinkSync(pathFind);
+    
+          }
+        });
+    
+        fs.rmdirSync(pathFind);
+      }
 
     } catch(e) {
       console.error('No such file or directory: ', pathFind)
 
-    }
-  }
+    }          
+  };
+  
+  var copyFolderRecursive = function (filePath) {
+    try {
+      fs.readdirSync(filePath).forEach(function(file) {
+        var pathFind = filePath + '/' + file;
+    
+        if(fs.lstatSync(pathFind).isDirectory()) {
+          copyFolderRecursive(pathFind);
+    
+        } else {
+          fs.copyFileSync(pathFind, path.resolve(pathFind.replace(pathFrom, pathTo)), {
+            process: function(contents) {
+              fs.writeFile(path.resolve(pathFind.replace(pathFrom, pathTo)), contents)
 
-  deleteExistingBindles();
+              filesCount += 1;
+            }
+          })
+        }
+      });
+
+    } catch(e) {
+      console.error('No such file or directory: ', filePath)
+
+    } 
+
+    
+  }
 
   if (!fs.existsSync(path.resolve(pathTo))) {
     fs.mkdir(path.resolve(pathTo));
-  }
 
-  findHtmlTemplatesRecursive(path.resolve(pathFrom));
+  } else {
+    deleteFolderRecursive();
+
+  }  
+
+  for (var i = 0; i < copyList.length; i++) {
+    var paths = copyList[i].split('/');
+    var filePath = path.resolve(pathFrom + '/' + copyList[i]);
+
+    if (paths[paths.length - 1] === '*') {
+      copyFolderRecursive(filePath.replace('/*', ''));
+
+    } else {      
+      var pathFind = copyList[i];
+
+      try {
+        fs.copyFileSync(filePath, path.resolve(pathTo + '/' + pathFind), {
+          process: function(contents) {
+            fs.writeFile(path.resolve(pathTo + '/' + pathFind), contents)
+
+            filesCount += 1;
+          }
+        })
   
-  console.info('Builded ' + htmlFilesBuilded + ' templates.');
+      } catch(e) {
+        console.error('No such file or directory: ', filePath)
+  
+      }      
+    }
+  }  
+
+  console.info('Copied ' + filesCount + ' files.');  
 };

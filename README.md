@@ -4,11 +4,15 @@
 ##### Example using
 
 ```js
-var copy = require('englishdom-templates');
+var copy = require('englishdom-webpack-copy');
 
 method(  
+  [
+    'first/first-sub/first-sub-sub',
+    'second/second',
+  ],
   'example',
-  'public/bundles-templates'
+  'public/example-vendor'
 );
 ```
 
@@ -16,10 +20,11 @@ method(
 
 ```
 # NPM
-npm install englishdom-webpack-templates
+npm install englishdom-webpack-copy
 ```
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
-pathFrom | string | undefined | files will be get from this folder
-pathTo | string | undefined | files will be builded to this folder
+list | array | undefined | default list of modules paths, which must be copied
+pathFrom | string | node_modules | files will be copied from this path
+pathTo | string | undefined | files will be copied to this path
